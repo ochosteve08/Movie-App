@@ -22,7 +22,7 @@ function App() {
       try {
         const response = await fetch(URL);
         const data = await response.json();
-        console.log(data);
+       
 
         setMovie(data.Search);
       } catch (err) {
