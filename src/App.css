@@ -4,8 +4,10 @@ body{
 }
 
 .movie-app .app{
-  overflow-x: auto;
-  flex-wrap: wrap;
+  overflow-x:auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+ 
   
 }
 
@@ -36,3 +38,4 @@ body{
   width: 100%;
 }
 
+ .app::-webkit-scrollbar { width: 0 !important }

@@ -11,34 +11,56 @@ function App() {
   const [movie, setMovie] = useState([]);
   const [search, setSearch] = useState("");
   const [favorite, setFavorite] = useState([]);
+  const [debounce, setDebounce] = useState("");
 
   const API_URL = "http://www.omdbapi.com/";
   const API_KEY = "c3e66fb";
 
   useEffect(() => {
-    const FetchMovie = async () => {
-      const URL = `${API_URL}?s=${search}&apikey=${API_KEY}`;
+    const getData = setTimeout(() => {
+      const FetchMovie = async () => {
+        const URL = `${API_URL}?s=${search}&apikey=${API_KEY}`;
 
-      try {
-        const response = await fetch(URL);
-        const data = await response.json();
-       
+        try {
+          const response = await fetch(URL);
+          const data = await response.json();
 
-        setMovie(data.Search);
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-    FetchMovie();
-  }, [search]);
+          setMovie(data.Search);
+        } catch (err) {
+          console.log(err.message);
+        }
+      };
+      FetchMovie();
+
+      return () => {
+        clearTimeout(getData);
+      };
+    }, 2000);
+  }, [debounce, search]);
+
+  useEffect(() => {
+    const movieFavorite = JSON.parse(
+      localStorage.getItem("react-movie-app-favorite")
+    );
+
+    if (movieFavorite) {
+      setFavorite(movieFavorite);
+    }
+  }, []);
+
+  const addToLocalStorage = (items) => {
+    localStorage.setItem("react-movie-app-favorite", JSON.stringify(items));
+  };
 
   const handleChange = (event) => {
     setSearch(event.target.value);
+    setDebounce(event.target.value);
   };
 
   const AddFavoriteMovie = (movies) => {
     const newFavoriteList = [...favorite, movies];
     setFavorite(newFavoriteList);
+    addToLocalStorage(newFavoriteList);
   };
 
   const RemoveFavoriteMovie = (movies) => {
@@ -46,6 +68,7 @@ function App() {
       (favorite) => favorite.imdbID !== movies.imdbID
     );
     setFavorite(newFavoriteList);
+    addToLocalStorage(newFavoriteList);
   };
 
   return (
@@ -54,7 +77,7 @@ function App() {
         <MovieListHeading title={"Movies"} />
         <SearchBox search={search} handleChange={handleChange} />
       </div>
-      <div className="d-flex flex-row">
+      <div className="app d-flex flex-row">
         <MovieList
           movies={movie}
           Favorite={AddFavorite}
@@ -64,7 +87,7 @@ function App() {
       <div className="fav d-flex flex-row align-items-center justify-content-start m-4">
         <MovieListHeading title={"Favorites"} />
       </div>
-      <div className="d-flex flex-row">
+      <div className="app d-flex flex-row">
         <MovieList
           movies={favorite}
           Favorite={RemoveFavorite}
