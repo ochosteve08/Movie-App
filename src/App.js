@@ -11,32 +11,26 @@ function App() {
   const [movie, setMovie] = useState([]);
   const [search, setSearch] = useState("");
   const [favorite, setFavorite] = useState([]);
-  const [debounce, setDebounce] = useState("");
 
   const API_URL = "http://www.omdbapi.com/";
   const API_KEY = "c3e66fb";
 
   useEffect(() => {
-    const getData = setTimeout(() => {
-      const FetchMovie = async () => {
-        const URL = `${API_URL}?s=${search}&apikey=${API_KEY}`;
+    const FetchMovie = async () => {
+      const URL = `${API_URL}?s=${search}&apikey=${API_KEY}`;
 
-        try {
-          const response = await fetch(URL);
-          const data = await response.json();
+      try {
+        const response = await fetch(URL);
+        const data = await response.json();
 
-          setMovie(data.Search);
-        } catch (err) {
-          console.log(err.message);
-        }
-      };
-      FetchMovie();
+        setMovie(data.Search);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
 
-      return () => {
-        clearTimeout(getData);
-      };
-    }, 2000);
-  }, [debounce, search]);
+    FetchMovie();
+  }, [search]);
 
   useEffect(() => {
     const movieFavorite = JSON.parse(
@@ -54,7 +48,7 @@ function App() {
 
   const handleChange = (event) => {
     setSearch(event.target.value);
-    setDebounce(event.target.value);
+   
   };
 
   const AddFavoriteMovie = (movies) => {
@@ -73,7 +67,7 @@ function App() {
 
   return (
     <div className="container-fluid movie-app">
-      <div className="app d-flex flex-row align-items-center justify-content-sm-between m-4 ">
+      <div className="header  m-4 ">
         <MovieListHeading title={"Movies"} />
         <SearchBox search={search} handleChange={handleChange} />
       </div>
