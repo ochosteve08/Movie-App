@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import MovieList from "./Components/MovieList";
 import SearchBox from "./Components/SearchBox";
